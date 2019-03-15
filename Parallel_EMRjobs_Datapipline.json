@@ -1,0 +1,33 @@
+{
+  "objects": [
+    {
+      "failureAndRerunMode": "CASCADE",
+      "resourceRole": "DataPipelineDefaultResourceRole",
+      "role": "DataPipelineDefaultRole",
+      "pipelineLogUri": "s3://harshay/datapiplinelogs/",
+      "scheduleType": "ONDEMAND",
+      "name": "Default",
+      "id": "Default"
+    },
+    {
+      "name": "DefaultEmrCluster1",
+      "coreInstanceCount": "1",
+      "id": "EmrClusterId_A62MM",
+      "releaseLabel": "emr-5.21.0",
+      "type": "EmrCluster",
+      "terminateAfter": "1 Hour",
+      "applications": "Spark"
+    },
+    {
+      "maximumRetries": "1",
+      "name": "EMRJOB1",
+      "step": "command-runner.jar,spark-submit,s3://harshay/1.py",
+      "id": "EmrActivityId_gSpEW",
+      "runsOn": {
+        "ref": "EmrClusterId_A62MM"
+      },
+      "type": "EmrActivity"
+    }
+  ],
+  "parameters": []
+}

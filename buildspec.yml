@@ -7,4 +7,4 @@ artifacts:
   type: zip
   files:
     - samTemplate2.yml
-    - outputSamTemplate.yml
+    - outputSamTemplate2.yml

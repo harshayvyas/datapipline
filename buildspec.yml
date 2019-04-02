@@ -2,7 +2,7 @@ version: 0.2
 phases:
   install:
     commands:
-      - aws cloudformation package --template-file samTemplate2.yml --s3-bucket cicdinput --output-template-file outputSamTemplate.yml
+      - aws cloudformation package --template-file samTemplate2.yml --s3-bucket cicdinput --output-template-file outputSamTemplate2.yml
 artifacts:
   type: zip
   files:

@@ -1,0 +1,37 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: An example template for a Step Functions state machine.
+Resources:
+  MyStateMachine:
+    Type: AWS::StepFunctions::StateMachine
+    Properties:
+      StateMachineName: Testingparallel
+      DefinitionString: !Sub |
+        {
+          "StartAt": "ParallelTest",
+          "States": {
+            "ParallelTest": {
+                "Type": "Parallel",
+                "Next": "Third",
+                "Branches": [
+                        {
+                           "StartAt": "submitjob1",
+                           "States": {
+                              "submitjob1":{
+                              "Type": "Task",
+                              "Resource":"arn:aws:lambda:us-east-1:866613642352:function:harshay-emrjobsubmit",
+                               "End":true
+                               }
+
+                        }
+                        {
+                        "StartAt": "Submit2",
+                        "States": {
+                          "Submit2":{
+                          "Type": "Task",
+                          "Resource":"arn:aws:lambda:us-east-1:866613642352:function:harshayjobsumit2",
+                          "End":true
+                        }
+                     ]
+                }
+            }
+      RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction

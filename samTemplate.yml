@@ -12,3 +12,74 @@ Resources:
       MemorySize: 128
       Timeout: 30
       Role: 'arn:aws:iam::484570708875:role/lambdarole'
+  MyStateMachine:
+
+    Type: AWS::StepFunctions::StateMachine
+
+    Properties:
+
+      StateMachineName: ParallelCFNCICD-StateMachine
+
+      DefinitionString: |-
+
+        {
+
+          "StartAt": "HelloWorld",
+
+          "States": {
+
+            "HelloWorld": {
+
+              "Type": "Parallel",
+
+              "Next":"Third",
+
+              "Branches":[
+                {
+
+                "StartAt":"submitjob1",
+
+                "States":{
+
+                  "submitjob1":{
+
+                    "Type":"Task",
+
+                    "Resource": !GetAtt CDDemoLambda.arn,
+
+                    "End": true
+                    }
+                   }
+                },
+                {
+
+                "StartAt":"submitjob2",
+
+                "States":{
+
+                  "submitjob2":{
+
+                    "Type":"Task",
+
+                    "Resource": !GetAtt CDDemoLambda.arn,
+
+                    "End": true
+                }
+               }
+            }
+            ]
+            },
+            "Third": {
+
+              "Type": "Task",
+
+              "Resource":!GetAtt CDDemoLambda.arn,
+
+              "End": true
+
+            }
+
+          }
+
+        }
+      RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction

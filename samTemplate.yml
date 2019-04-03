@@ -5,6 +5,7 @@ Resources:
   CDDemoLambda:
     Type: 'AWS::Serverless::Function'
     Properties:
+      FunctionName: 'cicd-helloworld'
       Handler: lambda_function.lambda_handler
       Runtime: python3.6
 #      CodeUri: ./
@@ -45,7 +46,7 @@ Resources:
 
                     "Type":"Task",
 
-                    "Resource":"Fn::GetAtt": ["CDDemoLambda" , "Arn"],
+                    "Resource":"${CDDemoLambda.Arn}",
 
                     "End": true
                     }
@@ -61,7 +62,7 @@ Resources:
 
                     "Type":"Task",
 
-                    "Resource":"Fn::GetAtt": ["CDDemoLambda" , "Arn"],
+                    "Resource":"${CDDemoLambda.Arn}",
 
                     "End": true
                 }
@@ -73,7 +74,7 @@ Resources:
 
               "Type": "Task",
 
-              "Resource":"Fn::GetAtt": ["CDDemoLambda" , "Arn"],
+              "Resource":"${CDDemoLambda.Arn}",
 
               "End": true
 

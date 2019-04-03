@@ -46,7 +46,7 @@ Resources:
 
                     "Type":"Task",
 
-                    "Resource":!GetAtt "CDDemoLambda.Arn" ,
+                    "Resource":"!GetAtt" "CDDemoLambda.Arn" ,
 
                     "End": true
                     }

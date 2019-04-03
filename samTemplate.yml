@@ -45,7 +45,7 @@ Resources:
 
                     "Type":"Task",
 
-                    "Resource": Fn::GetAtt: ["CDDemoLambda" , "Arn"],
+                    "Resource":"Fn::GetAtt": ["CDDemoLambda" , "Arn"],
 
                     "End": true
                     }
@@ -61,7 +61,7 @@ Resources:
 
                     "Type":"Task",
 
-                    "Resource": Fn::GetAtt: ["CDDemoLambda" , "Arn"],
+                    "Resource":"Fn::GetAtt": ["CDDemoLambda" , "Arn"],
 
                     "End": true
                 }
@@ -73,7 +73,7 @@ Resources:
 
               "Type": "Task",
 
-              "Resource":Fn::GetAtt: ["CDDemoLambda" , "Arn"],
+              "Resource":"Fn::GetAtt": ["CDDemoLambda" , "Arn"],
 
               "End": true
 

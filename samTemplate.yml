@@ -41,19 +41,20 @@ Resources:
                     "StartAt":"submitjob2",
                     "States":{
                        "submitjob2":{
-                       "Type":"Task",
-                       "Resource":"${lambdaArn}",
-                       "End": true
+                         "Type":"Task",
+                         "Resource":"${lambdaArn}",
+                         "End": true
+                         }
                        }
                     }
+                  ]
+                },
+                "Third": {
+                  "Type": "Task",
+                  "Resource":"${lambdaArn}",
+                  "End": true
                   }
-                ]
-              },
-              "Third": {
-              "Type": "Task",
-              "Resource":"${lambdaArn}",
-              "End": true
+                }
               }
-            }
           - {lambdaArn: !GetAtt [CDDemoLambda,Arn]}
       RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction

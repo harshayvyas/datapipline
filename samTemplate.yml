@@ -40,12 +40,12 @@ Resources:
                     {
                     "StartAt":"submitjob2",
                     "States":{
-                       "submitjob2":{
-                         "Type":"Task",
-                         "Resource":"${lambdaArn}",
-                         "End": true
-                         }
-                       }
+                      "submitjob2":{
+                        "Type":"Task",
+                        "Resource":"${lambdaArn}",
+                        "End": true
+                        }
+                      }
                     }
                   ]
                 },

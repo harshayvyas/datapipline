@@ -53,8 +53,8 @@ Resources:
                   "Type": "Task",
                   "Resource":"${lambdaArn}",
                   "End": true
-                  }
                 }
               }
+            }
           - {lambdaArn: !GetAtt [CDDemoLambda,Arn]}
       RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction

@@ -21,7 +21,7 @@ Resources:
 
       StateMachineName: ParallelCFNCICD-StateMachine
 
-      DefinitionString: ! Sub |
+      DefinitionString: !Sub |
         {
           "StartAt": "HelloWorld",
           "States": {

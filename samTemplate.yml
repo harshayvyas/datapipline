@@ -55,5 +55,5 @@ Resources:
               "End": true
               }
             }
-          - {lambdaArn: !GetAtt [cicd-helloworld,Arn]}
+          - {lambdaArn: !GetAtt [CDDemoLambda,Arn]}
       RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction

@@ -15,11 +15,11 @@ Resources:
       Role: 'arn:aws:iam::484570708875:role/lambdarole'
   MyStateMachine:
 
-    Type: AWS::StepFunctions::StateMachine
+    Type: "AWS::StepFunctions::StateMachine"
 
     Properties:
 
-      StateMachineName: ParallelCFNCICD-StateMachine
+      StateMachineName: "ParallelCFNCICD-StateMachine"
 
       DefinitionString:
         !Sub

@@ -22,39 +22,38 @@ Resources:
           - |-
             {
               "StartAt": "HelloWorld",
-                        "States": {
-                          "HelloWorld": {
-                            "Type": "Parallel",
-                            "Next":"Third",
-                            "Branches":[
-                              {
-                              "StartAt":"submitjob1",
-                              "States":{
-                                "submitjob1":{
-                                  "Type":"Task",
-                                  "Resource":"${lambdaArn}",
-                                  "End": true
-                                }
-                              }
-                             },
-                             {
-                              "StartAt":"submitjob2",
-                              "States":{
-                                "submitjob2":{
-                                   "Type":"Task",
-                                   "Resource":"${lambdaArn}",
-                                   "End": true
-                                   }
-                                }
-                              }
-                            ]
-                          },
-                          "Third": {
-                            "Type": "Task",
-                            "Resource":"${lambdaArn}",
-                            "End": true
-                            }
-                          }
+              "States": {
+                "HelloWorld": {
+                  "Type": "Parallel",
+                  "Next":"Third",
+                  "Branches":[
+                    {
+                    "StartAt":"submitjob1",
+                    "States":{
+                      "submitjob1":{
+                        "Type":"Task",
+                        "Resource":"${lambdaArn}",
+                        "End": true
                         }
-                      - {lambdaArn: !GetAtt [cicd-helloworld,Arn]}
+                      }
+                    },
+                    {
+                    "StartAt":"submitjob2",
+                    "States":{
+                       "submitjob2":{
+                       "Type":"Task",
+                       "Resource":"${lambdaArn}",
+                       "End": true
+                       }
+                    }
+                  }
+                ]
+              },
+              "Third": {
+              "Type": "Task",
+              "Resource":"${lambdaArn}",
+              "End": true
+              }
+            }
+          - {lambdaArn: !GetAtt [cicd-helloworld,Arn]}
       RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction

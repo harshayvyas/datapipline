@@ -21,7 +21,9 @@ Resources:
 
       StateMachineName: ParallelCFNCICD-StateMachine
 
-      DefinitionString: !Sub |
+      DefinitionString:
+        !Sub
+          - |-
         {
           "StartAt": "HelloWorld",
           "States": {
@@ -34,7 +36,7 @@ Resources:
                 "States":{
                   "submitjob1":{
                     "Type":"Task",
-                    "Resource":"${cicd-helloworld.Arn}",
+                    "Resource":"${lambdaArn}",
                     "End": true
                     }
                    }
@@ -44,7 +46,7 @@ Resources:
                 "States":{
                   "submitjob2":{
                     "Type":"Task",
-                    "Resource":"${cicd-helloworld.Arn}",
+                    "Resource":"${lambdaArn}",
                     "End": true
                 }
                }
@@ -53,9 +55,10 @@ Resources:
             },
             "Third": {
               "Type": "Task",
-              "Resource":"${cicd-helloworld.Arn}",
+              "Resource":"${lambdaArn}",
               "End": true
             }
           }
         }
+      - {lambdaArn: !GetAtt [cicd-helloworld,Arn]}
       RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction

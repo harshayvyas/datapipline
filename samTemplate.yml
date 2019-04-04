@@ -34,7 +34,7 @@ Resources:
                 "States":{
                   "submitjob1":{
                     "Type":"Task",
-                    "Resource":"${cicd-helloworld.Arn}" ,
+                    "Resource":"${cicd-helloworld.Arn}",
                     "End": true
                     }
                    }

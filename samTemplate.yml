@@ -21,49 +21,30 @@ Resources:
 
       StateMachineName: ParallelCFNCICD-StateMachine
 
-      DefinitionString: |-
-
+      DefinitionString: ! Sub |
         {
-
           "StartAt": "HelloWorld",
-
           "States": {
-
             "HelloWorld": {
-
               "Type": "Parallel",
-
               "Next":"Third",
-
               "Branches":[
                 {
-
                 "StartAt":"submitjob1",
-
                 "States":{
-
                   "submitjob1":{
-
                     "Type":"Task",
-
-                    "Resource":"!GetAtt" "CDDemoLambda.Arn" ,
-
+                    "Resource":"${cicd-helloworld.Arn}" ,
                     "End": true
                     }
                    }
                 },
                 {
-
                 "StartAt":"submitjob2",
-
                 "States":{
-
                   "submitjob2":{
-
                     "Type":"Task",
-
-                    "Resource":"arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:cicd-helloworld",
-
+                    "Resource":"${cicd-helloworld.Arn}",
                     "End": true
                 }
                }
@@ -71,16 +52,10 @@ Resources:
             ]
             },
             "Third": {
-
               "Type": "Task",
-
-              "Resource":"arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:cicd-helloworld",
-
+              "Resource":"${cicd-helloworld.Arn}",
               "End": true
-
             }
-
           }
-
         }
-      RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction
+    RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction

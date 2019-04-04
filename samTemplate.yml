@@ -58,4 +58,4 @@ Resources:
             }
           }
         }
-    RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction
+      RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction

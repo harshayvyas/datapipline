@@ -70,7 +70,7 @@ Resources:
                           "params":["recs_delivered"]
                         },
                         "Type":"Task",
-                        "Resource":"${lambdaArn}",
+                        "Resource":"${lambdaArn2}",
                         "Next": "waiting1"
                         },
                       "waiting1":{
@@ -83,7 +83,7 @@ Resources:
                           "previous-step-output.$" : "$.output"
                           },
                           "Type":"Task",
-                          "Resource":"${lambdaArn}",
+                          "Resource":"${lambdaArn3}",
                           "Next": "Job1 complete?",
                           "ResultPath":"$.jobStatus"
                         },

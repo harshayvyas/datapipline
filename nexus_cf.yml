@@ -127,7 +127,7 @@ Resources:
                        "Type":"Fail",
                        "Error":"Job",
                        "Cause":"Job1 job did not complete successfully. Please check logs."
-                       },
+                       }
                     }
                     {
                     "StartAt":"submitjob2",

@@ -67,7 +67,7 @@ Resources:
                       "RecsDelivered":{
                         "Parameters":{
                           "previous-step-output.$" : "$.output",
-                          "params":"["recs_delivered"]"
+                          "params":["recs_delivered"]
                         },
                         "Type":"Task",
                         "Resource":"${lambdaArn}",

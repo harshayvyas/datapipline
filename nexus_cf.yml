@@ -84,7 +84,7 @@ Resources:
                           },
                           "Type":"Task",
                           "Resource":"${lambdaArn}",
-                          "Next": "Job1 complete?"
+                          "Next": "Job1 complete?",
                           "ResultPath":"$.jobStatus"
                         },
                       "Job1 complete?":{

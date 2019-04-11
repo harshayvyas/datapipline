@@ -67,7 +67,7 @@ Resources:
                       "RecsDelivered":{
                         "Parameters":{
                           "previous-step-output.$" : "$.output",
-                          "params": "["recs_delivered"]"
+                          "params":"["recs_delivered"]"
                         },
                         "Type":"Task",
                         "Resource":"${lambdaArn}",
@@ -128,11 +128,13 @@ Resources:
                        "Error":"Job",
                        "Cause":"Job1 job did not complete successfully. Please check logs."
                        }
-                    },
-                    {
-                    "StartAt":"submitjob2",
-                    "States":{
-                      "submitjob2":{
+                    }
+
+                },
+                {
+                "StartAt":"submitjob2",
+                "States":{
+                    "submitjob2":{
                         "Type":"Task",
                         "Resource":"${lambdaArn}",
                         "End": true

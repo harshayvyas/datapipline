@@ -1,0 +1,152 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: Saml template for Nexus jobs with lambdas and step functions
+Resources:
+  EMRLambda:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: 'create-emr-cluster'
+      Handler: create-emr-cluster.lambda_handler
+      Runtime: python3.6
+      Description: 'Lambda function for spinning emr clusters'
+      MemorySize: 128
+      Timeout: 30
+      Role: 'arn:aws:iam::484570708875:role/lambdarole'
+  NexusJobsubmitLambda:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: 'Nexus-Job-Submit'
+      Handler: nexus_job_submit.lambda_handler
+      Runtime: python3.6
+      Description: 'Lambda function for submitting jobs'
+      MemorySize: 128
+      Timeout: 30
+      Role: 'arn:aws:iam::484570708875:role/lambdarole'
+  EMRJobStatusMultistep:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: 'EMR-Job-Status-Multistep'
+      Handler: emr-job-status-multistep.lambda_handler
+      Runtime: python3.6
+      Description: 'Lambda function for multistep'
+      MemorySize: 128
+      Timeout: 30
+      Role: 'arn:aws:iam::484570708875:role/lambdarole'
+  EMRTerminate:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: 'EMR-Terminate'
+      Handler: terminate-emr-cluster.lambda_handler
+      Runtime: python3.6
+      Description: 'Lambda function for terminating clusters'
+      MemorySize: 128
+      Timeout: 30
+      Role: 'arn:aws:iam::484570708875:role/lambdarole'
+  NexusStateMachine:
+    Type: 'AWS::StepFunctions::StateMachine'
+    Properties:
+      StateMachineName: "NexusStateMachine"
+      DefinitionString:
+        !Sub
+          - |-
+            {
+              "StartAt": "Parallel1",
+              "States": {
+                "Parallel1": {
+                  "Type": "Parallel",
+                  "Next":"Eligibility",
+                  "Branches":[
+                    {
+                    "StartAt":"Launch Cluster1",
+                    "States":{
+                      "Launch Cluster1":{
+                        "Type":"Task",
+                        "Resource":"${lambdaArn}",
+                        "Next": "RecsDelivered"
+                        },
+                      "RecsDelivered":{
+                        "Parameters":{
+                          "previous-step-output.$" : "$.output",
+                          "params": ["recs_delivered"]
+                        },
+                        "Type":"Task",
+                        "Resource":"${lambdaArn}",
+                        "Next": "waiting1"
+                        },
+                      "waiting1":{
+                        "Type":"Wait",
+                        "Seconds":50,
+                        "Next":"Query Job1 status"
+                        },
+                      "Query Job1 status":{
+                        "Parameters":{
+                          "previous-step-output.$" : "$.output"
+                          },
+                          "Type":"Task",
+                          "Resource":"${lambdaArn}",
+                          "Next": "Job1 complete?"
+                          "ResultPath":"$.jobStatus"
+                        },
+                      "Job1 complete?":{
+                        "Type":"Choice",
+                        "Choices":[
+                          {
+                           "Or":[
+                              {
+                                "Variable":"$.jobStatus",
+                                "StringEquals":"CANCEL_PENDING"
+                              },
+                              {
+                                "Variable":"$.jobStatus",
+                                "StringEquals":"CANCELLED"
+                              },
+                              {
+                                "Variable":"$.jobStatus",
+                                "StringEquals":"FAILED"
+                              },
+                              {
+                                "Variable":"$.jobStatus",
+                                "StringEquals":"INTERRUPTED"
+                              }
+                            ],
+                           "Next":"Job1 job failed"
+                          },
+                          {
+                                "Variable":"$.jobStatus",
+                                "StringEquals":"COMPLETED",
+                                "Next":"Job1pass"
+                            }
+                        ],
+                          "Default":"waiting1"
+                        },
+                      "Job1pass":{
+                       "Type":"Pass",
+                       "End": true
+                       },
+                      "Job1 job failed":{
+                       "Type":"Fail",
+                       "Error":"Job",
+                       "Cause":"Job1 job did not complete successfully. Please check logs."
+                       },
+                    }
+                    {
+                    "StartAt":"submitjob2",
+                    "States":{
+                      "submitjob2":{
+                        "Type":"Task",
+                        "Resource":"${lambdaArn}",
+                        "End": true
+                        }
+                      }
+                    }
+                  ]
+                },
+                "Eligibility": {
+                  "Type": "Task",
+                  "Resource":"${lambdaArn}",
+                  "End": true
+                }
+              }
+            }
+          - {lambdaArn: !GetAtt [EMRLambda,Arn],lambdaArn2: !GetAtt [NexusJobsubmitLambda,Arn],lambdaArn3: !GetAtt [EMRJobStatusMultistep,Arn],lambdaArn4: !GetAtt [EMRTerminate,Arn]}
+      RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction

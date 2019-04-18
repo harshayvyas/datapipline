@@ -2,7 +2,7 @@ import boto3
 #LAMBDA testing
 
 def lambda_handler(event,context):
-    print("hello worlds!!!!!!!!!!!")
+    print("hello worlds!!!!!!")
 
 
 

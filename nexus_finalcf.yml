@@ -1,0 +1,354 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: Saml template for Nexus jobs with lambdas and step functions
+Resources:
+  EMRLambda:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: 'com-ebi-nx-emr-cluster-create'
+      Handler: com-ebi-nx-emr-cluster-create.lambda_handler
+      Runtime: python3.6
+      CodeUri: ./lambda/lambda_function.py
+      Description: 'Lambda function for spinning emr clusters'
+      MemorySize: 128
+      Timeout: 900
+      Role: 'arn:aws:iam::484570708875:role/lambdarole'
+  NexusJobsubmitLambda:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: 'com-ebi-nx-emr-job-submit'
+      Handler: com-ebi-nx-emr-job-submit.lambda_handler
+      Runtime: python3.6
+      CodeUri: ./lambda/lambda_function.py
+      Description: 'Lambda function for submitting jobs'
+      MemorySize: 128
+      Timeout: 30
+      Role: 'arn:aws:iam::484570708875:role/lambdarole'
+  EMRJobStatusMultistep:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: 'com-ebi-nx-emr-job-status-multistep'
+      Handler: com-ebi-nx-emr-job-status-multistep.lambda_handler
+      Runtime: python3.6
+      CodeUri: ./lambda/lambda_function.py
+      Description: 'Lambda function for emr status'
+      MemorySize: 128
+      Timeout: 30
+      Role: 'arn:aws:iam::484570708875:role/lambdarole'
+  EMRTerminate:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: 'com-ebi-nx-emr-terminate-cluster'
+      Handler: com-ebi-nx-emr-terminate-cluster.lambda_handler
+      Runtime: python3.6
+      CodeUri: ./lambda/lambda_function.py
+      Description: 'Lambda function for terminating clusters'
+      MemorySize: 128
+      Timeout: 30
+      Role: 'arn:aws:iam::484570708875:role/lambdarole'
+    BatchControlstep:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: 'com-ebi-nx-batch-control'
+      Handler: com-ebi-nx-batch-control.lambda_handler
+      Runtime: python3.6
+      CodeUri: ./lambda/lambda_function.py
+      Description: 'Lambda function for batch status'
+      MemorySize: 128
+      Timeout: 30
+      Role: 'arn:aws:iam::484570708875:role/lambdarole'
+  NexusStateMachine:
+    Type: 'AWS::StepFunctions::StateMachine'
+    Properties:
+      StateMachineName: "NexusStateMachine"
+      DefinitionString:
+        !Sub
+          - |-
+            {
+              "StartAt":"Parallel1",
+              "States":{
+                "Parallel1":{
+                  "Type":"Parallel",
+                  "Next":"ELIGIBLE_CUSTOMERS,CLIENT_METRICS",
+                  "Branches":[
+                    {
+                      "StartAt":"Launch Cluster1",
+                      "States":{
+                        "Launch Cluster1":{
+                          "Type":"Task",
+                          "Resource":"${lambdaArn}"
+                          "Next":"AGGREGATE_RECS,CHURN_CUSTOMERS,POSTERIOR_PROBABILITY,ieMRC,CLV"
+                        },
+                        "AGGREGATE_RECS,CHURN_CUSTOMERS,POSTERIOR_PROBABILITY,ieMRC,CLV":{
+                          "Parameters":{
+                            "previous-step-output.$":"$.output",
+                            "params":[
+                              "AGGREGATE_RECS",
+                              "CHURN_CUSTOMERS",
+                              "POSTERIOR_PROBABILITY",
+                              "ieMRC",
+                              "CLV"
+                            ]
+                          },
+                          "Type":"Task",
+                          "Resource":"${lambdaArn2}",
+                          "Next":"waiting1"
+                        },
+                        "waiting1":{
+                          "Type":"Wait",
+                          "Seconds":300,
+                          "Next":"Query Job1 status"
+                        },
+                        "Query Job1 status":{
+                          "Parameters":{
+                            "previous-step-output.$":"$.output"
+                          },
+                          "Type":"Task",
+                          "Resource":"${lambdaArn3}",
+                          "Next":"Job1 complete?",
+                          "ResultPath":"$.jobStatus"
+                        },
+                        "Job1 complete?":{
+                          "Type":"Choice",
+                          "Choices":[
+                            {
+                              "Or":[
+                                {
+                                  "Variable":"$.jobStatus",
+                                  "StringEquals":"CANCEL_PENDING"
+                                },
+                                {
+                                  "Variable":"$.jobStatus",
+                                  "StringEquals":"CANCELLED"
+                                },
+                                {
+                                  "Variable":"$.jobStatus",
+                                  "StringEquals":"FAILED"
+                                },
+                                {
+                                  "Variable":"$.jobStatus",
+                                  "StringEquals":"INTERRUPTED"
+                                }
+                              ],
+                              "Next":"status2"
+                            },
+                            {
+                              "Variable":"$.jobStatus",
+                              "StringEquals":"COMPLETED",
+                              "Next":"status1"
+                            }
+                          ],
+                          "Default":"waiting1"
+                        },
+                        "Job1pass":{
+                          "Type":"Pass",
+                          "End":true
+                        },
+                        "status1":{
+                          "Type":"Task",
+                          "Resource":"${lambdaArn5}",
+                          "Next":"Job1pass"
+                        },
+                        "status2":{
+                          "Type":"Task",
+                          "Resource":"${lambdaArn5}",
+                          "Next":"Job1 job failed"
+                        },
+                        "Job1 job failed":{
+                          "Type":"Fail",
+                          "Error":"Job",
+                          "Cause":"Job1 job did not complete successfully. Please check logs."
+                        }
+                      }
+                    },
+                    {
+                      "StartAt":"Launch Cluster2",
+                      "States":{
+                        "Launch Cluster2":{
+                          "Type":"Task",
+                          "Resource":"${lambdaArn}",
+                          "Next":"SEGMENT_PROBABILITY"
+                        },
+                        "SEGMENT_PROBABILITY":{
+                          "Parameters":{
+                            "previous-step-output.$":"$.output",
+                            "params":[
+                              "SEGMENT_PROBABILITY"
+                            ]
+                          },
+                          "Type":"Task",
+                          "Resource":"${lambdaArn2}",
+                          "Next":"waiting9"
+                        },
+                        "waiting9":{
+                          "Type":"Wait",
+                          "Seconds":300,
+                          "Next":"Query Job9 status"
+                        },
+                        "Query Job9 status":{
+                          "Parameters":{
+                            "previous-step-output.$":"$.output"
+                          },
+                          "Type":"Task",
+                          "Resource":"${lambdaArn3}",
+                          "Next":"Job9 complete?",
+                          "ResultPath":"$.jobStatus"
+                        },
+                        "Job9 complete?":{
+                          "Type":"Choice",
+                          "Choices":[
+                            {
+                              "Or":[
+                                {
+                                  "Variable":"$.jobStatus",
+                                  "StringEquals":"CANCEL_PENDING"
+                                },
+                                {
+                                  "Variable":"$.jobStatus",
+                                  "StringEquals":"CANCELLED"
+                                },
+                                {
+                                  "Variable":"$.jobStatus",
+                                  "StringEquals":"FAILED"
+                                },
+                                {
+                                  "Variable":"$.jobStatus",
+                                  "StringEquals":"INTERRUPTED"
+                                }
+                              ],
+                              "Next":"status4"
+                            },
+                            {
+                              "Variable":"$.jobStatus",
+                              "StringEquals":"COMPLETED",
+                              "Next":"Job9pass"
+                            }
+                          ],
+                          "Default":"waiting9"
+                        },
+                        "Job9pass":{
+                          "Type":"Pass",
+                          "Next":"Terminate Cluster2"
+                        },
+                        "Terminate Cluster2":{
+                          "Parameters":{
+                            "previous-step-output.$":"$.output",
+                            "params":[
+                              "SEGMENT_PROBABILITY"
+                            ]
+                          },
+                          "Type":"Task",
+                          "Resource":"${lambdaArn4}",
+                          "Next":"status3"
+                        },
+                        "status3":{
+                          "Type":"Task",
+                          "Resource":"${lambdaArn5}",
+                          "End":true
+                        },
+                        "status4":{
+                          "Type":"Task",
+                          "Resource":"${lambdaArn5}",
+                          "Next":"Job9 job failed"
+                        },
+                        "Job9 job failed":{
+                          "Type":"Fail",
+                          "Error":"Job",
+                          "Cause":"Job9 job did not complete successfully. Please check logs."
+                        }
+                      }
+                    }
+                  ]
+                },
+                "ELIGIBLE_CUSTOMERS,CLIENT_METRICS":{
+                  "Parameters":{
+                    "previous-step-output.$":"$[0].output",
+                    "params":[
+                      "ELIGIBLE_CUSTOMERS",
+                      "CLIENT_METRICS"
+                    ]
+                  },
+                  "Type":"Task",
+                  "Resource":"${lambdaArn2}",
+                  "Next":"waiting7"
+                },
+                "waiting7":{
+                  "Type":"Wait",
+                  "Seconds":300,
+                  "Next":"Query Job7 status"
+                },
+                "Query Job7 status":{
+                  "Parameters":{
+                    "previous-step-output.$":"$.output"
+                  },
+                  "Type":"Task",
+                  "Resource":"${lambdaArn3}",
+                  "Next":"Job7 complete?",
+                  "ResultPath":"$.jobStatus"
+                },
+                "Job7 complete?":{
+                  "Type":"Choice",
+                  "Choices":[
+                    {
+                      "Or":[
+                        {
+                          "Variable":"$.jobStatus",
+                          "StringEquals":"CANCEL_PENDING"
+                        },
+                        {
+                          "Variable":"$.jobStatus",
+                          "StringEquals":"CANCELLED"
+                        },
+                        {
+                          "Variable":"$.jobStatus",
+                          "StringEquals":"FAILED"
+                        },
+                        {
+                          "Variable":"$.jobStatus",
+                          "StringEquals":"INTERRUPTED"
+                        }
+                      ],
+                      "Next":"status6"
+                    },
+                    {
+                      "Variable":"$.jobStatus",
+                      "StringEquals":"COMPLETED",
+                      "Next":"Job7pass"
+                    }
+                  ],
+                  "Default":"waiting7"
+                },
+                "status6":{
+                  "Type":"Task",
+                  "Resource":"${lambdaArn5}",
+                  "Next":"Job7 job failed"
+                },
+                "Job7pass":{
+                  "Type":"Pass",
+                  "Next":"Terminate Cluster1"
+                },
+                "Job7 job failed":{
+                  "Type":"Fail",
+                  "Error":"Job",
+                  "Cause":"Job7 job did not complete successfully. Please check logs."
+                },
+                "Terminate Cluster1":{
+                  "Parameters":{
+                    "previous-step-output.$":"$.output",
+                    "params":[
+                      "SEGMENT_PROBABILITY"
+                    ]
+                  },
+                  "Type":"Task",
+                  "Resource":"${lambdaArn4}",
+                  "Next":"status5"
+                },
+                "status5":{
+                  "Type":"Task",
+                  "Resource":"${lambdaArn5}",
+                  "End":true
+                }
+              }
+			}
+          - {lambdaArn: !GetAtt [EMRLambda,Arn],lambdaArn2: !GetAtt [NexusJobsubmitLambda,Arn],lambdaArn3: !GetAtt [EMRJobStatusMultistep,Arn],lambdaArn4: !GetAtt [EMRTerminate,Arn],lambdaArn5: !GetAtt [BatchControlstep,Arn]}
+      RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction

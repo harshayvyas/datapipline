@@ -2,9 +2,9 @@ version: 0.2
 phases:
   install:
     commands:
-      - aws cloudformation package --template-file nexus_cf.yml --s3-bucket cicdinput --output-template-file nexusSamTemplate.yml
+      - aws cloudformation package --template-file nexus_finalcf.yml --s3-bucket cicdinput --output-template-file nexusSamTemplate.yml
 artifacts:
   type: zip
   files:
-    - nexus_cf.yml
+    - nexus_finalcf.yml
     - nexusSamTemplate.yml

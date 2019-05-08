@@ -38,15 +38,14 @@ Resources:
   EMRTerminate:
     Type: 'AWS::Serverless::Function'
     Properties:
-      FunctionName: 'com-ebi-nx-emr-terminate-cluster'
-      Handler: com-ebi-nx-emr-terminate-cluster.lambda_handler
+      FunctionName: 'EMR-Terminate'
+      Handler: terminate-emr-cluster.lambda_handler
       Runtime: python3.6
-      CodeUri: ./lambda/lambda_function.py
       Description: 'Lambda function for terminating clusters'
       MemorySize: 128
       Timeout: 30
       Role: 'arn:aws:iam::484570708875:role/lambdarole'
-    BatchControlstep:
+  BatchControlstep:
     Type: 'AWS::Serverless::Function'
     Properties:
       FunctionName: 'com-ebi-nx-batch-control'
@@ -65,8 +64,8 @@ Resources:
         !Sub
           - |-
             {
-              "StartAt":"Parallel1",
-              "States":{
+            "StartAt":"Parallel1",
+            "States":{
                 "Parallel1":{
                   "Type":"Parallel",
                   "Next":"ELIGIBLE_CUSTOMERS,CLIENT_METRICS",
@@ -351,4 +350,4 @@ Resources:
               }
 			}
           - {lambdaArn: !GetAtt [EMRLambda,Arn],lambdaArn2: !GetAtt [NexusJobsubmitLambda,Arn],lambdaArn3: !GetAtt [EMRJobStatusMultistep,Arn],lambdaArn4: !GetAtt [EMRTerminate,Arn],lambdaArn5: !GetAtt [BatchControlstep,Arn]}
-      RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction
+      RoleArn:arn:aws:iam::484570708875:role/service-role/stepfunction

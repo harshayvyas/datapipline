@@ -350,4 +350,4 @@ Resources:
                     }
             }
           - {lambdaArn: !GetAtt [EMRLambda,Arn],lambdaArn2: !GetAtt [NexusJobsubmitLambda,Arn],lambdaArn3: !GetAtt [EMRJobStatusMultistep,Arn],lambdaArn4: !GetAtt [EMRTerminate,Arn],lambdaArn5: !GetAtt [BatchControlstep,Arn]}
-      RoleArn:arn:aws:iam::484570708875:role/service-role/stepfunction
+      RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction

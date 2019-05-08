@@ -59,7 +59,7 @@ Resources:
   NexusStateMachine:
     Type: 'AWS::StepFunctions::StateMachine'
     Properties:
-      StateMachineName: "NexusStateMachine"
+      StateMachineName: "NexusStateMachinefinal"
       DefinitionString:
         !Sub
           - |-

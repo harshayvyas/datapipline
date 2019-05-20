@@ -10,7 +10,6 @@ phases:
 
 #working
 artifacts:
-  artifacts1:
       type: zip
       files:
       - nexus_finalcf.yml

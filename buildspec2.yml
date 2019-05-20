@@ -5,16 +5,15 @@ phases:
       - aws cloudformation package --template-file nexus_finalcf.yml --s3-bucket cicdinput --output-template-file nexusSamTemplate.yml
 #
 artifacts:
-  secondary-artifacts:
-    artifact1:
-      base-directory: $CODEBUILD_SRC_DIR_artifact1
       type: zip
       files:
       - nexus_finalcf.yml
       - nexusSamTemplate.yml
+secondary-artifacts:
     artifact2:
-      base-directory: $CODEBUILD_SRC_DIR_artifact2
       type: zip
       files:
         - nexus_finalcf.yml
         - nexusSamTemplate.yml
+      name: artifact2
+      base-directory: $CODEBUILD_SRC_DIR_artifact2

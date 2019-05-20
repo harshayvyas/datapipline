@@ -3,6 +3,11 @@ phases:
   install:
     commands:
       - aws cloudformation package --template-file nexus_finalcf.yml --s3-bucket cicdinput --output-template-file nexusSamTemplate.yml
+      - cd $CODEBUILD_SRC_DIR
+      - touch file1
+      - cd $CODEBUILD_SRC_DIR_artifact2
+      - touch file2
+
 #working
 artifacts:
   artifacts1:
@@ -14,7 +19,6 @@ secondary-artifacts:
     artifact21:
       type: zip
       files:
-        - nexus_finalcf.yml
-        - nexusSamTemplate.yml
+        - file2
       name: artifact2
       base-directory: $CODEBUILD_SRC_DIR_artifact2

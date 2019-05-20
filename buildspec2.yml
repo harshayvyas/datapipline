@@ -8,7 +8,7 @@ phases:
       - cd $CODEBUILD_SRC_DIR_artifact2
       - touch file2
 
-#working code
+#working code   
 artifacts:
       type: zip
       files:

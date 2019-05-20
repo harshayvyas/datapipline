@@ -7,13 +7,13 @@ phases:
 artifacts:
   secondary-artifacts:
     artifact1:
-      base-directory: $CODEBUILD_SRC_DIR
+      base-directory: $CODEBUILD_SRC_DIR_nexusbuild
       type: zip
       files:
       - nexus_finalcf.yml
       - nexusSamTemplate.yml
     artifact2:
-      base-directory: $CODEBUILD_SRC_DIR
+      base-directory: $CODEBUILD_SRC_DIR_nexusbuild
       type: zip
       files:
         - nexus_finalcf.yml

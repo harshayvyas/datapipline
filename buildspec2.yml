@@ -18,6 +18,7 @@ secondary-artifacts:
     artifact21:
       type: zip
       files:
-        - file2
+        - nexus_finalcf.yml
+        - nexusSamTemplate.yml
       name: artifact2
       base-directory: $CODEBUILD_SRC_DIR_artifact2

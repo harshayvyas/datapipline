@@ -4,6 +4,7 @@ phases:
     commands:
       - aws cloudformation package --template-file nexus_finalcf.yml --s3-bucket cicdinput --output-template-file nexusSamTemplate.yml
       - echo $CODEBUILD_SRC_DIR
+      - cd $CODEBUILD_SRC_DIR_source2
 #working
 artifacts:
   artifacts1:

@@ -2,31 +2,20 @@ version: 0.2
 phases:
   install:
     commands:
+      - echo $CODEBUILD_SRC_DIR
       - aws cloudformation package --template-file nexus_finalcf.yml --s3-bucket cicdinput --output-template-file nexusSamTemplate.yml
-      - cd $CODEBUILD_SRC_DIR
 
-      - touch file1
-#      - cd $CODEBUILD_SRC_DIR_artifact2
-#      - touch file2
-  post_build:
-    commands:
-      - aws cloudformation package --template-file nexus_finalcf.yml --s3-bucket cicdinput --output-template-file nexusSamTemplate.yml
-      - cd $CODEBUILD_SRC_DIR_artifact21
-      - touch file1
-      - echo $CODEBUILD_SRC_DIR_artifact21
-
-#workingcode
 artifacts:
       type: zip
       files:
       - nexus_finalcf.yml
       - nexusSamTemplate.yml
-secondary-artifacts:
-    artifact21:
-      type: zip
-      files:
-        - file
-#       - nexus_finalcf.yml
-#       - nexusSamTemplate.yml
-      name: artifact2
-      base-directory: $CODEBUILD_SRC_DIR_artifact21
+#secondary-artifacts:
+#    artifact21:
+#      type: zip
+#      files:
+#        - file
+##       - nexus_finalcf.yml
+##       - nexusSamTemplate.yml
+#      name: artifact2
+#      base-directory: $CODEBUILD_SRC_DIR_artifact21

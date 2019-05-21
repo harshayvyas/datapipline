@@ -5,7 +5,9 @@ phases:
       - echo $CODEBUILD_SRC_DIR
       - cd $CODEBUILD_SRC_DIR
       - ls
-      - aws cloudformation package --template-file nexus_finalcf.yml --s3-bucket cicdinput --output-template-file nexusSamTemplate.yml
+
+
+      - aws cloudformation package --template-file $CODEBULD_SRC_DIR/config/nexus_finalcf.yml --s3-bucket cicdinput --output-template-file nexusSamTemplate.yml
 
 artifacts:
       type: zip

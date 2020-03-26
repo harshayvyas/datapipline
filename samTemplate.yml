@@ -16,12 +16,11 @@ Resources:
   MyStateMachine:
     Type: 'AWS::StepFunctions::StateMachine'
     Properties:
-      StateMachineName: "ParallelCFNCICD-StateMachine"
+      StateMachineName: "harshay_fns_StateMachine"
       DefinitionString:
-        !Sub
-          - |-
-            {
-              "StartAt": "HelloWorld",
+        Fn::Sub :
+          -
+            "StartAt": "HelloWorld",
               "States": {
                 "HelloWorld": {
                   "Type": "Parallel",

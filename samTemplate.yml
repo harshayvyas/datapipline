@@ -18,8 +18,7 @@ Resources:
     Properties:
       StateMachineName: "harshay_fns_StateMachine"
       DefinitionString:
-        Fn::Sub :
-          -
+        Fn::Sub : |-
             "StartAt": "HelloWorld",
               "States": {
                 "HelloWorld": {

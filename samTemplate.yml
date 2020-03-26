@@ -22,4 +22,4 @@ Resources:
         Name: AWS::Include
         Parameters:
           Location:
-            Fn::Sub: s3://
+            Fn::Sub: s3://cicdinput/definition.yml

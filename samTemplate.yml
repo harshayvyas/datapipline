@@ -53,5 +53,5 @@ Resources:
                   "End": true
                 }
               }
-          - {lambdaArn: ! CDDemoLambda,Arn}
+          - {lambdaArn: Fn::GetAtt: [CDDemoLambda ,arn]}
       RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction

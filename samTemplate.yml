@@ -17,9 +17,43 @@ Resources:
     Type: 'AWS::StepFunctions::StateMachine'
     Properties:
       StateMachineName: "harshay_fns_StateMachine"
+      DefinitionString:
+        Fn::Sub : |-
+          {
+            "StartAt": "HelloWorld",
+              "States": {
+                "HelloWorld": {
+                  "Type": "Parallel",
+                  "Next":"Third",
+                  "Branches":[
+                    {
+                    "StartAt":"submitjob1",
+                    "States":{
+                      "submitjob1":{
+                        "Type":"Task",
+                        "Resource":"${lambdaArn}",
+                        "End": true
+                        }
+                      }
+                    },
+                    {
+                    "StartAt":"submitjob2",
+                    "States":{
+                      "submitjob2":{
+                        "Type":"Task",
+                        "Resource":"${lambdaArn}",
+                        "End": true
+                        }
+                      }
+                    }
+                  ]
+                },
+                "Third": {
+                  "Type": "Task",
+                  "Resource":"${lambdaArn}",
+                  "End": true
+                }
+              }
+            }
+          - lambdaArn: arn:aws:iam::484570708875:role/lambdarole
       RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction
-      Fn::Transform:
-        Name: AWS::Include
-        Parameters:
-          Location:
-            Fn::Sub: s3://cicdinput/definition.yml

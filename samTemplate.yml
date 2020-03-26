@@ -3,8 +3,8 @@ Transform: 'AWS::Serverless-2016-10-31'
 Description: CD Demo Lambda
 Parameters:
   arnvalue:
-  Type: String
-  Default: arn:aws:iam::484570708875:role/lambdarole
+    Type: String
+    Default: arn:aws:iam::484570708875:role/lambdarole
 Resources:
   CDDemoLambda:
     Type: 'AWS::Serverless::Function'

@@ -53,6 +53,5 @@ Resources:
                   "End": true
                 }
               }
-            }
-          - {lambdaArn: !Ref CDDemoLambda,Arn}
+          - {lambdaArn: ! CDDemoLambda,Arn}
       RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction

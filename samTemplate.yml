@@ -18,8 +18,9 @@ Resources:
     Properties:
       StateMachineName: "harshay_fns_StateMachine"
       DefinitionString:
-        Fn::Sub :
-          - "StartAt": "HelloWorld",
+        Fn::Sub : |-
+          {
+            "StartAt": "HelloWorld",
               "States": {
                 "HelloWorld": {
                   "Type": "Parallel",
@@ -53,5 +54,6 @@ Resources:
                   "End": true
                 }
               }
-          - {lambdaArn: Fn::GetAtt: [CDDemoLambda ,arn]}
+            }
+          - lambdaArn: Fn::GetAtt: [CDDemoLambda ,arn]
       RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction

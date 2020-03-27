@@ -7,5 +7,4 @@ phases:
 artifacts:
   type: zip
   files:
-    - '**/*'
-  base-directory: '/codebuild/output/src522647827/src/'
+    - '/*'

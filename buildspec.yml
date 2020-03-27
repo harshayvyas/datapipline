@@ -8,4 +8,4 @@ artifacts:
   type: zip
   files:
     - '**/*'
-  base-directory: 'src'
+  base-directory: '/codebuild/output/src522647827/src/'

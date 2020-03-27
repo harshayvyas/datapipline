@@ -3,7 +3,7 @@ phases:
   install:
     commands:
       - echo $CODEBUILD_SRC_DIR
-      - RUN ls
+      - ls
       - aws cloudformation package --template-file samTemplate.yml --s3-bucket cicdinput --output-template-file outputSamTemplate.yml
 artifacts:
   type: zip

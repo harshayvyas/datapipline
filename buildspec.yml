@@ -3,9 +3,9 @@ phases:
   install:
     commands:
       - echo $CODEBUILD_SRC_DIR
-      - LS
+      - ls
 artifacts:
   type: zip
   files:
     - '**/*'
-base-directory: ' CICDLAMBDA '
+  base-directory: ' CICDLAMBDA '

@@ -4,10 +4,6 @@ Description: CD Demo Lambda
 Parameters:
   EnvType:
     Type: String
-    Default: test
-    AllowedValues:
-      - prod
-      - dev
 EnvironmentMap:
   prod:
     RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction

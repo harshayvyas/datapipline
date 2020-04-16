@@ -1,10 +1,5 @@
-"configuration": {
-        "ActionMode": "Create or replace a change set",
-        "Capabilities": "CAPABILITY_IAM",
-        "ChangeSetName": "sam",
-        "ParameterOverrides": "{\"EnType\": \"prod\"}",
-        "RoleArn": "arn:aws:iam::484570708875:role/CfServiceRole",
-        "StackName": "sam",
-        "TemplateConfiguration": "sam::config.json",
-        "TemplatePath": "sam::samTemplate.yml"
-    }
+{
+        "Parameters": {
+                "EnvType": "prod"
+        }
+}

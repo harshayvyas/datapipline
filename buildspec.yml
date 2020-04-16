@@ -2,10 +2,9 @@ version: 0.2
 phases:
   install:
     commands:
-      - echo $CODEBUILD_SRC_DIR
-      - ls
+      - aws cloudformation package --template-file samTemplate.yml --parameter-overrides EnvType=dev --s3-bucket cicdinput --output-template-file outputSamTemplate.yml
 artifacts:
   type: zip
   files:
-    - '**/test/*'
-  base-directory: 'config'
+    - samTemplate.yml
+    - outputSamTemplate.yml

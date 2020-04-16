@@ -2,9 +2,16 @@ AWSTemplateFormatVersion: '2010-09-09'
 Transform: 'AWS::Serverless-2016-10-31'
 Description: CD Demo Lambda
 Parameters:
-  arnvalue:
+  EnvType:
     Type: String
-    Default: arn:aws:iam::484570708875:role/lambdarole
+    Default: test
+    AllowedValues:
+      - prod
+      - test
+EnvironmentMap:
+  Dev:
+    RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction
+    Name: ParallelCFNCICD-StateMachine
 Resources:
   CDDemoLambda:
     Type: 'AWS::Serverless::Function'
@@ -20,10 +27,10 @@ Resources:
   MyStateMachine:
     Type: 'AWS::StepFunctions::StateMachine'
     Properties:
-      StateMachineName: "harshay_fns_StateMachine"
+      StateMachineName:  !FindInMap [EnvironmentMap,!Ref EnvType, Name ]
       DefinitionString:
-        Fn::Sub : |-
-          {
+        Fn::Sub :
+          -
             "StartAt": "HelloWorld",
               "States": {
                 "HelloWorld": {
@@ -59,5 +66,5 @@ Resources:
                 }
               }
             }
-          - "lambdaArn": "arn:aws:iam::484570708875:role/service-role/stepfunction"
-      RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction
+          - {lambdaArn: !GetAtt [CDDemoLambda,Arn]}
+      RoleArn: !FindInMap [EnvironmentMap,!Ref EnvType,RoleArn]

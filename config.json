@@ -1,5 +1,5 @@
 {
         "Parameters": {
-                "EnvType": "prod"
+                "EnvType": "dev"
         }
 }

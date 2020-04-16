@@ -29,42 +29,43 @@ Resources:
     Properties:
       StateMachineName:  !FindInMap [EnvironmentMap,!Ref EnvType, Name ]
       DefinitionString:
-        Fn::Sub :
-          -
+        !Sub
+        - |-
+          {
             "StartAt": "HelloWorld",
-              "States": {
-                "HelloWorld": {
-                  "Type": "Parallel",
-                  "Next":"Third",
-                  "Branches":[
-                    {
-                    "StartAt":"submitjob1",
-                    "States":{
-                      "submitjob1":{
-                        "Type":"Task",
-                        "Resource":"${lambdaArn}",
-                        "End": true
-                        }
-                      }
-                    },
-                    {
-                    "StartAt":"submitjob2",
-                    "States":{
-                      "submitjob2":{
-                        "Type":"Task",
-                        "Resource":"${lambdaArn}",
-                        "End": true
-                        }
+            "States": {
+              "HelloWorld": {
+                "Type": "Parallel",
+                "Next":"Third",
+                "Branches":[
+                  {
+                  "StartAt":"submitjob1",
+                  "States":{
+                    "submitjob1":{
+                      "Type":"Task",
+                      "Resource":"${lambdaArn}",
+                      "End": true
                       }
                     }
-                  ]
-                },
-                "Third": {
-                  "Type": "Task",
-                  "Resource":"${lambdaArn}",
-                  "End": true
-                }
+                  },
+                  {
+                  "StartAt":"submitjob2",
+                  "States":{
+                    "submitjob2":{
+                      "Type":"Task",
+                      "Resource":"${lambdaArn}",
+                      "End": true
+                      }
+                    }
+                  }
+                ]
+              },
+              "Third": {
+                "Type": "Task",
+                "Resource":"${lambdaArn}",
+                "End": true
               }
             }
-          - {lambdaArn: !GetAtt [CDDemoLambda,Arn]}
+          }
+        - {lambdaArn: !GetAtt [CDDemoLambda,Arn]}
       RoleArn: !FindInMap [EnvironmentMap,!Ref EnvType,RoleArn]

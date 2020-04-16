@@ -27,7 +27,7 @@ Resources:
   MyStateMachine:
     Type: 'AWS::StepFunctions::StateMachine'
     Properties:
-      StateMachineName:  !FindInMap [EnvironmentMap,${EnvType}, Name ]
+      StateMachineName:  !FindInMap [EnvironmentMap,!Sub '${EnvType}', Name ]
       DefinitionString:
         !Sub
         - |-
@@ -68,4 +68,4 @@ Resources:
             }
           }
         - {lambdaArn: !GetAtt [CDDemoLambda,Arn]}
-      RoleArn: !FindInMap [EnvironmentMap,${EnvType},RoleArn]
+      RoleArn: !FindInMap [EnvironmentMap,'${EnvType}',RoleArn]

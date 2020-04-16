@@ -2,7 +2,7 @@ version: 0.2
 phases:
   install:
     commands:
-      - aws cloudformation package --template-file samTemplate.yml --parameter-overrides EnvType=dev --s3-bucket cicdinput --output-template-file outputSamTemplate.yml
+      - aws cloudformation package --template-file samTemplate.yml --parameter-overrides ParameterKey=EnvType,ParameterValue=dev --s3-bucket cicdinput --output-template-file outputSamTemplate.yml
 artifacts:
   type: zip
   files:

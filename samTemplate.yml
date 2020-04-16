@@ -4,10 +4,11 @@ Description: CD Demo Lambda
 Parameters:
   EnvType:
     Type: String
-EnvironmentMap:
-  prod:
-    RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction
-    Name: ParallelCFNCICD-StateMachine
+Mappings:
+  EnvironmentMap:
+    prod:
+      RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction
+      Name: ParallelCFNCICD-StateMachine
 Resources:
   CDDemoLambda:
     Type: 'AWS::Serverless::Function'

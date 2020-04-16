@@ -8,3 +8,4 @@ artifacts:
   files:
     - samTemplate.yml
     - outputSamTemplate.yml
+    - config.json

@@ -3,7 +3,7 @@ Transform: 'AWS::Serverless-2016-10-31'
 Description: CD Demo Lambda
 Mappings:
   "484570708875":
-    "us-east-1":
+    "us-east-2":
       RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction
       Name: ParallelCFNCICD-StateMachine-Accountid
   "484570708876":

@@ -1,17 +1,15 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: 'AWS::Serverless-2016-10-31'
 Description: CD Demo Lambda
-Parameters:
-  EnvType:
-    Type: String
 Mappings:
-  EnvironmentMap:
-    prod:
+  "484570708875":
+    "us-east-1":
       RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction
-      Name: ParallelCFNCICD-StateMachine
-    dev:
-      Name: dev-statemchine
-      RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction
+      Name: ParallelCFNCICD-StateMachine-Accountid
+    "484570708876":
+      "us-east-1":
+        Name: dev-statemchine
+        RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction
 Resources:
   CDDemoLambda:
     Type: 'AWS::Serverless::Function'
@@ -27,7 +25,7 @@ Resources:
   MyStateMachine:
     Type: 'AWS::StepFunctions::StateMachine'
     Properties:
-      StateMachineName:  !FindInMap [EnvironmentMap,!Ref EnvType,Name]
+      StateMachineName:  !FindInMap [!Ref "AWS::AccountId",!Ref "AWS::Region",Name]
       DefinitionString:
         !Sub
         - |-
@@ -68,4 +66,4 @@ Resources:
             }
           }
         - {lambdaArn: !GetAtt [CDDemoLambda,Arn]}
-      RoleArn: !FindInMap [EnvironmentMap,!Ref EnvType,RoleArn]
+      RoleArn: !FindInMap [!Ref "AWS::AccountId",!Ref "AWS::Region",RoleArn]

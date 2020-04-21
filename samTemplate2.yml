@@ -1,6 +1,17 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: 'AWS::Serverless-2016-10-31'
 Description: CD Demo Lambda
+Parameters:
+  EnvType:
+    Type: String
+Mappings:
+  EnvironmentMap:
+    prod:
+      RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction
+      Name: ParallelCFNCICD-StateMachine
+    dev:
+      Name: dev-statemchine
+      RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction
 Resources:
   CDDemoLambda:
     Type: 'AWS::Serverless::Function'
@@ -16,10 +27,45 @@ Resources:
   MyStateMachine:
     Type: 'AWS::StepFunctions::StateMachine'
     Properties:
-      StateMachineName: "harshay_fns_StateMachine"
-      RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction
-      Fn::Transform:
-        Name: AWS::Include
-        Parameters:
-          Location:
-            Fn::Sub: s3://cicdinput/definition.yml
+      StateMachineName:  !FindInMap [EnvironmentMap,!Ref EnvType,Name]
+      DefinitionString:
+        !Sub
+        - |-
+          {
+            "StartAt": "HelloWorld",
+            "States": {
+              "HelloWorld": {
+                "Type": "Parallel",
+                "Next":"Third",
+                "Branches":[
+                  {
+                  "StartAt":"submitjob1",
+                  "States":{
+                    "submitjob1":{
+                      "Type":"Task",
+                      "Resource":"${lambdaArn}",
+                      "End": true
+                      }
+                    }
+                  },
+                  {
+                  "StartAt":"submitjob2",
+                  "States":{
+                    "submitjob2":{
+                      "Type":"Task",
+                      "Resource":"${lambdaArn}",
+                      "End": true
+                      }
+                    }
+                  }
+                ]
+              },
+              "Third": {
+                "Type": "Task",
+                "Resource":"${lambdaArn}",
+                "End": true
+              }
+            }
+          }
+        - {lambdaArn: !GetAtt [CDDemoLambda,Arn]}
+      RoleArn: !FindInMap [EnvironmentMap,!Ref EnvType,RoleArn]

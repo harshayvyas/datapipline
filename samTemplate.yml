@@ -6,8 +6,8 @@ Mappings:
     "us-east-1":
       RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction
       Name: ParallelCFNCICD-StateMachine-Accountid
-    "484570708876":
-      "us-east-1":
+  "484570708876":
+    "us-east-1":
         Name: dev-statemchine
         RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction
 Resources:

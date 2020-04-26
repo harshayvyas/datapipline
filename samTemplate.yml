@@ -21,7 +21,7 @@ Resources:
   MyStateMachine:
     Type: 'AWS::StepFunctions::StateMachine'
     Properties:
-      StateMachineName:  'testingwithoutmapping'
+      StateMachineName:  'testingwithoutmappings'
       DefinitionString:
         !Sub
         - |-

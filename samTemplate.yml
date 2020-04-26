@@ -57,5 +57,5 @@ Resources:
               }
             }
           }'
-        - {lambdaArn: Ref RoleArn] }
+        - {lambdaArn: Ref RoleArn }
       RoleArn: !FindInMap [EnvironmentMap,!Ref EnvType,RoleArn]

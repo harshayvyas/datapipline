@@ -6,14 +6,6 @@ Parameters:
     Type: String
   RoleArn:
     Type: String
-Mappings:
-  EnvironmentMap:
-    prod:
-      RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction
-      Name: ParallelCFNCICD-StateMachine-Accountid
-    dev:
-      Name: dev-statemchine
-      RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction
 Resources:
   CDDemoLambda:
     Type: 'AWS::Serverless::Function'
@@ -29,7 +21,7 @@ Resources:
   MyStateMachine:
     Type: 'AWS::StepFunctions::StateMachine'
     Properties:
-      StateMachineName:  !FindInMap [EnvironmentMap,!Ref EnvType,Name]
+      StateMachineName:  'testingwithoutmapping'
       DefinitionString:
         !Sub
         - |-
@@ -70,4 +62,4 @@ Resources:
             }
           }
         - {lambdaArn: !Ref RoleArn}
-      RoleArn: !FindInMap [EnvironmentMap,!Ref EnvType,RoleArn]
+      RoleArn: !Ref RoleArn

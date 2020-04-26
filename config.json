@@ -1,6 +1,6 @@
 {
         "Parameters": {
-                "EnvType": "prod"
-        },
-        "RoleArn": "arn:aws:iam::484570708875:role/service-role/stepfunction"
+                "EnvType": "prod",
+                "RoleArn": "arn:aws:iam::484570708875:role/service-role/stepfunction"
+        }
 }

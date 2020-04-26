@@ -4,6 +4,8 @@ Description: CD Demo Lambda
 Parameters:
   EnvType:
     Type: String
+  RoleArn:
+    Type: String
 Mappings:
   EnvironmentMap:
     prod:
@@ -68,5 +70,5 @@ Resources:
               }
             }
           }
-        - {lambdaArn: !FindInMap [Environment,!Ref EnvType,RoleArn]}
+        - {lambdaArn: !Ref RoleArn]}
       RoleArn: !FindInMap [EnvironmentMap,!Ref EnvType,RoleArn]

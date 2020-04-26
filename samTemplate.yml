@@ -11,7 +11,6 @@ Mappings:
     prod:
       RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction
       Name: ParallelCFNCICD-StateMachine-Accountid
-      lambda_arn: "arn:aws:lambda:us-east-2:484570708875:function:helloworld"
     dev:
         Name: dev-statemchine
         RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction

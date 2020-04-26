@@ -12,8 +12,8 @@ Mappings:
       RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction
       Name: ParallelCFNCICD-StateMachine-Accountid
     dev:
-        Name: dev-statemchine
-        RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction
+      Name: dev-statemchine
+      RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction
 Resources:
   CDDemoLambda:
     Type: 'AWS::Serverless::Function'

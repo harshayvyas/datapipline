@@ -37,7 +37,7 @@ Resources:
                   "States":{
                     "submitjob1":{
                       "Type":"Task",
-                      "Resource":"${lambdaArn}",
+                      "Resource":"${RoleArn}",
                       "End": true
                       }
                     }
@@ -47,7 +47,7 @@ Resources:
                   "States":{
                     "submitjob2":{
                       "Type":"Task",
-                      "Resource":"${lambdaArn}",
+                      "Resource":"${RoleArn}",
                       "End": true
                       }
                     }
@@ -56,10 +56,9 @@ Resources:
               },
               "Third": {
                 "Type": "Task",
-                "Resource":"${lambdaArn}",
+                "Resource":"${RoleArn}",
                 "End": true
               }
             }
           }
-        - {lambdaArn: !Ref RoleArn}
       RoleArn: !Ref RoleArn

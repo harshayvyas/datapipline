@@ -24,40 +24,42 @@ Resources:
       StateMachineName:  'testingwithoutmapping'
       DefinitionString:
         !Sub
-        '{
-          "StartAt": "HelloWorld",
-          "States": {
-            "HelloWorld": {
-              "Type": "Parallel",
-              "Next":"Third",
-              "Branches":[
-              {
-                "StartAt":"submitjob1",
-                "States":{
-                  "submitjob1":{
-                    "Type":"Task",
-                    "Resource":"${RoleArn}",
-                    "End": true
+        - |-
+          {
+            "StartAt": "HelloWorld",
+            "States": {
+              "HelloWorld": {
+                "Type": "Parallel",
+                "Next":"Third",
+                "Branches":[
+                  {
+                  "StartAt":"submitjob1",
+                  "States":{
+                    "submitjob1":{
+                      "Type":"Task",
+                      "Resource":"${RoleArn}",
+                      "End": true
+                      }
+                    }
+                  },
+                  {
+                  "StartAt":"submitjob2",
+                  "States":{
+                    "submitjob2":{
+                      "Type":"Task",
+                      "Resource":"${RoleArn}",
+                      "End": true
+                      }
+                    }
                   }
-                }
+                ]
               },
-              {
-                "StartAt":"submitjob2",
-                "States":{
-                  "submitjob2":{
-                    "Type":"Task",
-                    "Resource":"${RoleArn}",
-                    "End": true
-                  }
-                }
+              "Third": {
+                "Type": "Task",
+                "Resource":"${RoleArn}",
+                "End": true
               }
-              ]
-            },
-            "Third": {
-              "Type": "Task",
-              "Resource":"${RoleArn}",
-              "End": true
             }
           }
-        }'
+        - {lambdaArn: !Ref RoleArn}
       RoleArn: !Ref RoleArn

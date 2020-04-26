@@ -4,6 +4,8 @@ Description: CD Demo Lambda
 Parameters:
   EnvType:
     Type: String
+  RoleArn:
+    Type: String
 Mappings:
   EnvironmentMap:
     prod:
@@ -19,8 +21,7 @@ Resources:
       StateMachineName:  !FindInMap [EnvironmentMap,!Ref EnvType,Name]
       DefinitionString:
         !Sub
-        - |-
-          {
+          - '     {
             "StartAt": "HelloWorld",
             "States": {
               "HelloWorld": {
@@ -55,6 +56,6 @@ Resources:
                 "End": true
               }
             }
-          }
-        - {lambdaArn: !FindInMap [EnvironmentMap,!Ref EnvType,RoleArn] }
+          }'
+        - {lambdaArn: Ref RoleArn] }
       RoleArn: !FindInMap [EnvironmentMap,!Ref EnvType,RoleArn]

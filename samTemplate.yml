@@ -10,7 +10,7 @@ Mappings:
   EnvironmentMap:
     prod:
       RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction
-      Name: ParallelCFNCICD-StateMachineprod
+      Name: ParallelCFNCICD-StateMachineprods
     dev:
       Name: dev-statemchine
       RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction

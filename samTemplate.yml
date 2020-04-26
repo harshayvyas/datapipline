@@ -32,7 +32,7 @@ Resources:
                   "States":{
                     "submitjob1":{
                       "Type":"Task",
-                      "Resource":"${lambdaArn}",
+                      "Resource":${lambdaArn},
                       "End": true
                       }
                     }
@@ -42,7 +42,7 @@ Resources:
                   "States":{
                     "submitjob2":{
                       "Type":"Task",
-                      "Resource":"${lambdaArn}",
+                      "Resource":${lambdaArn},
                       "End": true
                       }
                     }
@@ -51,7 +51,7 @@ Resources:
               },
               "Third": {
                 "Type": "Task",
-                "Resource":"${lambdaArn}",
+                "Resource":${lambdaArn},
                 "End": true
               }
             }

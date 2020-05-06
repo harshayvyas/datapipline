@@ -1,17 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: 'AWS::Serverless-2016-10-31'
 Description: CD Demo Lambda
-Parameters:
-  EnvType:
-    Type: String
-Mappings:
-  EnvironmentMap:
-    prod:
-      RoleArn: arn:aws:iam::484570708875:role/HarshayRole
-      Name: ParallelCFNCICD-StateMachine
-    dev:
-      Name: dev-statemchine
-      RoleArn: arn:aws:iam::484570708875:role/HarshayRole
 Resources:
   CDDemoLambda:
     Type: 'AWS::Serverless::Function'
@@ -68,7 +57,7 @@ Resources:
             }
           }
         - {lambdaArn: !GetAtt [CDDemoLambda,Arn]}
-      RoleArn: !FindInMap [EnvironmentMap,!Ref EnvType,RoleArn]
+      RoleArn: arn:aws:iam::484570708875:role/HarshayRole
       LoggingConfiguration:
         - Destination:
             - /aws/states/MyStateMachine-temp-Logs

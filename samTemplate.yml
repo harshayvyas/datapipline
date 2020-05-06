@@ -16,7 +16,7 @@ Resources:
   MyStateMachine:
     Type: 'AWS::StepFunctions::StateMachine'
     Properties:
-      StateMachineName:  !FindInMap [EnvironmentMap,!Ref EnvType,Name]
+      StateMachineName:  logstatemachine
       DefinitionString:
         !Sub
         - |-

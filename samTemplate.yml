@@ -23,7 +23,7 @@ Resources:
       Description: 'Lambda function for CD Demo'
       MemorySize: 128
       Timeout: 30
-      Role: 'arn:aws:iam::484570708875:role/lambdarole'
+      Role: 'arn:aws:iam::484570708875:role/HarshayRole'
   MyStateMachine:
     Type: 'AWS::StepFunctions::StateMachine'
     Properties:
@@ -74,4 +74,3 @@ Resources:
             - /aws/states/MyStateMachine-temp-Logs
         - IncludeExecutionData: False
         - Level: ALL
-

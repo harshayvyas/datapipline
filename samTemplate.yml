@@ -62,6 +62,6 @@ Resources:
       LoggingConfiguration:
         Destinations:
           - CloudWatchLogsLogGroup:
-              LogGroupArn: 'arn:aws:logs:us-east-2:484570708875:log-group:/aws/lambda/helloworld:log-stream:*'
+              LogGroupArn: arn:aws:logs:us-east-2:484570708875:log-group:/aws/lambda/helloworld:log-stream:'*'
         IncludeExecutionData: False
         Level: ALL

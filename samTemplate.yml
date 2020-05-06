@@ -4,24 +4,34 @@ Description: CD Demo Lambda
 Parameters:
   EnvType:
     Type: String
-  RoleArn:
-    Type: String
 Mappings:
   EnvironmentMap:
     prod:
       RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction
-      Name: ParallelCFNCICD-StateMachineprods-log
+      Name: ParallelCFNCICD-StateMachine
     dev:
       Name: dev-statemchine
       RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction
 Resources:
+  CDDemoLambda:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      FunctionName: 'cicd-helloworld'
+      Handler: lambda_function.lambda_handler
+      Runtime: python3.6
+      CodeUri: ./lambda/
+      Description: 'Lambda function for CD Demo'
+      MemorySize: 128
+      Timeout: 30
+      Role: 'arn:aws:iam::484570708875:role/lambdarole'
   MyStateMachine:
     Type: 'AWS::StepFunctions::StateMachine'
     Properties:
       StateMachineName:  !FindInMap [EnvironmentMap,!Ref EnvType,Name]
       DefinitionString:
         !Sub
-          - '     {
+        - |-
+          {
             "StartAt": "HelloWorld",
             "States": {
               "HelloWorld": {
@@ -56,8 +66,8 @@ Resources:
                 "End": true
               }
             }
-          }'
-          - {lambdaArn: !GetAtt [CDDemoLambda,Arn] }
+          }
+        - {lambdaArn: !GetAtt [CDDemoLambda,Arn]}
       RoleArn: !FindInMap [EnvironmentMap,!Ref EnvType,RoleArn]
       LoggingConfiguration:
         - Destination:

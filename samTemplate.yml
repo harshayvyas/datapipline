@@ -59,7 +59,7 @@ Resources:
         - {lambdaArn: !GetAtt [CDDemoLambda,Arn]}
       RoleArn: arn:aws:iam::484570708875:role/HarshayRole
       LoggingConfiguration:
-        - Destination:
-            - /aws/states/MyStateMachine-temp-Logs
-        - IncludeExecutionData: False
-        - Level: ALL
+        Destination:
+          - /aws/states/MyStateMachine-temp-Logs
+        IncludeExecutionData: False
+        Level: ALL

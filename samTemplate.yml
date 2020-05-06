@@ -10,7 +10,7 @@ Mappings:
   EnvironmentMap:
     prod:
       RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction
-      Name: ParallelCFNCICD-StateMachineprods
+      Name: ParallelCFNCICD-StateMachineprods-log
     dev:
       Name: dev-statemchine
       RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction
@@ -59,3 +59,9 @@ Resources:
           }'
           - {lambdaArn: !Ref RoleArn }
       RoleArn: !FindInMap [EnvironmentMap,!Ref EnvType,RoleArn]
+      LoggingConfiguration:
+        - Destination:
+            - /aws/states/MyStateMachine-temp-Logs
+        - IncludeExecutionData: False
+        - Level: ALL
+

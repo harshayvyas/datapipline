@@ -7,11 +7,11 @@ Parameters:
 Mappings:
   EnvironmentMap:
     prod:
-      RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction
+      RoleArn: arn:aws:iam::484570708875:role/HarshayRole
       Name: ParallelCFNCICD-StateMachine
     dev:
       Name: dev-statemchine
-      RoleArn: arn:aws:iam::484570708875:role/service-role/stepfunction
+      RoleArn: arn:aws:iam::484570708875:role/HarshayRole
 Resources:
   CDDemoLambda:
     Type: 'AWS::Serverless::Function'

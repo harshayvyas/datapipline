@@ -60,7 +60,7 @@ Resources:
       RoleArn: arn:aws:iam::484570708875:role/HarshayRole
       StateMachineType: STANDARD
       LoggingConfiguration:
-        Destination:
+        Destinations:
           - CloudWatchLogsLogGroup:
               LogGroupArn: /aws/states/MyStateMachine-temp-Logs
         IncludeExecutionData: False

@@ -57,7 +57,7 @@ Resources:
               }
             }
           }'
-          - {lambdaArn: !Ref RoleArn }
+          - {lambdaArn: !GetAtt [CDDemoLambda,Arn] }
       RoleArn: !FindInMap [EnvironmentMap,!Ref EnvType,RoleArn]
       LoggingConfiguration:
         - Destination:
